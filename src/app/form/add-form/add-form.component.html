@@ -1,0 +1,163 @@
+<nav class="navbar navbar-light bg-primary">
+    <div class="container-fluid">
+      <h1>Angular Form Data</h1>
+      <div class="d-flex">
+        <button (click)=" clickAddEmployee()" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success">Add Data</button>
+      </div>
+    </div>
+  </nav>
+  <div>
+  <table class="table mt-3">
+    <thead>
+      <tr>
+        <th scope="col">Form Id</th>
+        <th scope="col">first Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Address</th>
+        <th scope="col">Mobile No</th>
+        <th scope="col">Gender</th>
+        <th scope="col">car</th>
+        <th scope="col">Action</th>
+
+      </tr>
+    </thead>
+    <tbody >
+      <tr *ngFor="let row of formData; let i = index">
+        <td>{{row._id}}</td>
+        <td>{{row.firstname}}</td>
+        <td>{{row.lastname}}</td>
+        <td>{{row.email}}</td>
+        <td>{{row.address}}</td>
+        <td>{{row.phone}}</td>
+        <td>{{row.gender}}</td>
+        <td>{{row.car}}</td>
+        <td>
+          <button class="btn btn-info" (click)="onEdit(row)" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+          <button (click)="deleteEmployee(row)" class="btn btn-danger" >Delete</button>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Form Details</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="login.resetForm()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #login="ngForm" >
+                <div class="form-row">
+                  <div class="col">
+            <label for="exampleInputEmail1" class="form-label">First Name</label>
+                 <input type="text" id="firstname" name="firstname" #firstname="ngModel" [(ngModel)]="formData.firstname" pattern="[a-zA-Z ]{4,8}$" class="form-control" placeholder="First name" [class.is-invalid]="firstname.touched && firstname.invalid ">
+            <span   *ngIf="firstname.touched && firstname.invalid " style="color: red;">Enter Valid Name And Minimum 4-8 Character</span>
+                  </div>
+                  <div class="col mt-4">
+            <label for="exampleInputEmail1" class="form-label">Last Name</label>
+                    <input type="text"  name="lastname" #lastname="ngModel" [(ngModel)]="formData.lastname" pattern="[a-zA-Z ]{4,8}$" class="form-control" placeholder="Last name"  [class.is-invalid]="lastname.touched && lastname.invalid ">
+            <span  *ngIf="lastname.touched && lastname.invalid " style="color: red;">Enter Valid Name And Minimum 6-12 Character</span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">email</label>
+                    <input type="email"  name="email"  #email="ngModel" [(ngModel)]="formData.email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" class="form-control" name="email" [class.is-invalid]="email.touched && email.invalid ">
+                    <span *ngIf="email.touched && !email.value" style="color: red;">Enter Valid email</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Address</label>
+                    <textarea class="form-control" name="address" #address="ngModel" [(ngModel)]="formData.address" id="exampleFormControlTextarea1" rows="3" [class.is-invalid]="address.touched && address.invalid "></textarea>
+                    <span *ngIf="address.touched && !address.value" style="color: red;">Enter Valid Address</span>
+
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">phone</label>
+                    <input type="number" name="phone" #phone="ngModel" [(ngModel)]="formData.phone" class="form-control" pattern="[0-9]{10,11}" [class.is-invalid]="phone.touched && phone.invalid " id="exampleInputPassword1" required>
+                    <span *ngIf="phone.touched && !phone.value" style="color: red;">Enter Valid phone</span>
+                  </div>
+                  <div class="col-12" >
+                    <div class="form-group" >
+                      <div>
+                        <label>Room Images<span class="c-red">*</span></label>
+                      </div>
+
+                      <div *ngFor='let url of already_uploadedurls;let i=index;'>
+                        <img *ngIf="!url.isdelete" [src]="base_url+'/'+url.image" height="200" >
+                        <div *ngIf="!url.isdelete" class="close-btn-wrapper"
+                          (click)="clearAlreadyUploadedFile(url.baseimage)"><i class="fa fa-times-circle"
+                            aria-hidden="true"></i></div>
+                      </div>
+
+                        <div *ngFor='let url of formData.room_images;let i=index;'>
+                        <img *ngIf="!url.isdelete" [src]="base_url+'/'+formData.room_images[i].image" height="200">
+                        <div *ngIf="!url.isdelete" class="close-btn-wrapper" (click)="clearOptionalFile(i)"><button class="btn btn-danger">x</button><i
+                            class="fa fa-times-circle" aria-hidden="true"></i></div>
+                      </div>
+                      <div *ngFor='let url of urls;let i=index;'>
+                        <img *ngIf="!url.isdelete" [src]="url.url" height="200">
+                        <div *ngIf="!url.isdelete" class="close-btn-wrapper" (click)="clearOptionalFile(i)"><button class="btn btn-danger">x</button><i
+                            class="fa fa-times-circle" aria-hidden="true"></i></div>
+                      </div>
+                      <button type="button" class="btn dark-blue-btn" (click)="roomImageFile.click()">
+                        <div>
+                          <i class="fa fa-plus" aria-hidden="true"></i>
+                          Upload
+                        </div>
+                        <input #roomImageFile type='file' (change)="onSelectFile($event)" multiple accept="image/*"
+                          style="display: none" [class.is-invalid]="login.submitted">
+                          <div class="alert alert-danger"
+                          *ngIf="(type=='add' && login.submitted && already_uploadedurls.length <= 0 ) || (type=='edit' && login.submitted && urls.length==0 ) ">
+                          <p>Sub Product Image can't be blank.</p>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="form-check" >
+                    <input class="form-check-input" value="male" type="radio" name="gender" #gender="ngModel" [(ngModel)]="formData.gender"  id="exampleInputPassword1" checked>
+                    <label class="form-check-label" for="exampleInputPassword1">
+                      Male
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" value="female" type="radio" name="gender"  #gender="ngModel" [(ngModel)]="formData.gender" id="exampleInputPassword1" >
+                    <label class="form-check-label" for="exampleInputPassword1">
+                      Female
+                    </label><br>
+                    <span *ngIf="gender.touched && !gender.value" style="color: red;">Enter Valid gender</span>
+                  </div>
+                  <div class="mb-3">
+                    <label class="switch" >
+                        <input type="checkbox" name="switch">
+                        <span class="slider round"></span>
+                      </label>
+                  </div>
+                  <!-- <div class="form-check">
+                    <label class="form-check-label"  for="exampleInputPassword1" id="exampleInputPassword1">car</label>
+                    <ng-select [multiple]="true" name="car"  #car="ngModel" [(ngModel)]="formData.car" style="border: 1px solid #000;">
+                      <ng-option *ngFor="let car1 of cars" [value]="car1.name" >{{car1.name}}</ng-option>
+
+                  </ng-select>
+                  </div> -->
+                  <div style="width:50%">
+                    <ng-multiselect-dropdown
+                        [settings]="dropdownSettings"
+                        [data]="dropdownList"
+                        (onSelect)="onItemSelect($event)"
+                        name="car"  #car="ngModel" [(ngModel)]="formData.car">{{car.name}}
+                    </ng-multiselect-dropdown>
+                </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel" class="btn btn-secondary" (click)="login.resetForm()" data-bs-dismiss="modal">Close</button>
+          <button *ngIf="showAdd" type="submit" [disabled]="login.form.invalid" (click)="postEmployeeDetails()"  class="btn btn-primary">Add</button>
+          <button  type="button" *ngIf="showUpdate" [disabled]="login.form.invalid" class="btn btn-primary" (click)="updateEmployeeDetails()">update</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
